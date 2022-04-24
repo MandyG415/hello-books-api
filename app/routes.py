@@ -1,4 +1,5 @@
 
+from attr import validate
 from flask import Blueprint, jsonify
 
 class Book:
@@ -15,6 +16,20 @@ books = [
 
 books_bp = Blueprint("books_bp", __name__, url_prefix="/books")
 
+def validate_book(book_id):
+  #handle invalid book_id, return 400
+    try:
+      book_id = int(book_id)
+    except:
+      return {"message": f"book {book_id} invalid"}, 400 #for invalid inputs
+  #search for book_id in data, and return book
+    for book in books:
+      if book.id == book_id:
+        return book
+      
+  #return a 404 for non-existing book
+    return {"message": f"book {book_id} not found"}, 404 #not found
+
 @books_bp.route("", methods=["GET"])
 def handle_books():
     books_response = []
@@ -30,16 +45,9 @@ def handle_books():
 
 @books_bp.route("/<book_id>", methods=["GET"])
 def handle_book(book_id):
-  try:
-    book_id = int(book_id)
-  except:
-    return {"message": f"book {book_id} invalid"}, 400
-
-  for book in books:
-    if book.id == book_id:
-      return {
-          "id": book.id,
-          "title": book.title,
-          "description": book.description,
-      }
-  return {"message": f"book {book_id} not found"}, 404
+    book = validate_book(book_id)
+    return {
+        "id": book.id,
+        "title": book.title,
+        "description": book.description,
+    }
