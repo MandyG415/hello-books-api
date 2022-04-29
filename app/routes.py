@@ -17,17 +17,17 @@ books = [
 books_bp = Blueprint("books_bp", __name__, url_prefix="/books")
 
 def validate_book(book_id):
-  #handle invalid book_id, return 400
+#handle invalid book_id, return 400
     try:
-      book_id = int(book_id)
+        book_id = int(book_id)
     except:
-      return {"message": f"book {book_id} invalid"}, 400 #for invalid inputs
-  #search for book_id in data, and return book
+        return {"message": f"book {book_id} invalid"}, 400 #for invalid inputs
+#search for book_id in data, and return book
     for book in books:
-      if book.id == book_id:
-        return book
-      
-  #return a 404 for non-existing book
+        if book.id == book_id:
+            return book
+
+#return a 404 for non-existing book
     return {"message": f"book {book_id} not found"}, 404 #not found
 
 @books_bp.route("", methods=["GET"])
