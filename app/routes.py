@@ -19,17 +19,22 @@ def validate_book(book_id): #helper function
 
 @books_bp.route("", methods=["GET"])
 def read_all_books():
-    if request.method == "GET":
+    books_response = []
+    
+    title_query = request.args.get("title")
+
+    if title_query is not None:
+        books = Book.query.filter_by(title = title_query)
+    else:
         books = Book.query.all()
-        books_response = []
-        for book in books:
-            books_response.append(
-                {
-                    "id": book.id,
-                    "title": book.title,
-                    "description": book.description
-                }
-            )
+    for book in books:
+        books_response.append(
+            {
+                "id": book.id,
+                "title": book.title,
+                "description": book.description
+            }
+        )
     return jsonify(books_response)
 
 @books_bp.route("", methods=["POST"])
