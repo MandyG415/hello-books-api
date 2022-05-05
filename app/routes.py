@@ -46,7 +46,7 @@ def create_book():
     db.session.add(new_book)
     db.session.commit()
     #books.append(new_book) #testing this out in local variable
-    return make_response(f"Book {new_book.title} successfully created", 201)
+    return make_response(jsonify(f"Book {new_book.title} successfully created", 201))
 
 @books_bp.route("/<book_id>", methods=["GET"])
 def read_one_book(book_id):
